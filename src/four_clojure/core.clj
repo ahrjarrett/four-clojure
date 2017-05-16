@@ -114,3 +114,37 @@
 (false? (nil-check :b {:a nil :b 2})) ;; => true
 (false? (nil-check :c {:a nil :b 2})) ;; => true
 
+;; Logical falsity and truth
+;; In Clojure, only nil and false represent the values of logical falsity in conditional tests - anything else is logical truth.
+;; (= __ (if-not false 1 0))
+;; (= __ (if-not nil 1 0))
+;; (= __ (if true 1 0))
+;; (= __ (if [] 1 0))
+;; (= __ (if [0] 1 0))
+;; (= __ (if 0 1 0))
+;; (= __ (if 1 1 0))
+
+(= 1 (if-not false 1 0))
+(= 1 (if-not nil 1 0))
+(= 1 (if true 1 0))
+(= 1 (if [] 1 0))
+(= 1 (if [0] 1 0))
+(= 1 (if 0 1 0))
+(= 1 (if 1 1 0))
+
+;; Subset and Superset
+;; Set A is a subset of set B, or equivalently B is a superset of A, if A is "contained" inside B. A and B may coincide.
+;; (clojure.set/superset? #{1 2} #{2})
+;; (clojure.set/subset? #{1} __)
+;; (clojure.set/superset? __ #{1 2})
+;; (clojure.set/subset? #{1 2} __)
+
+(clojure.set/superset? #{1 2} #{2})
+(clojure.set/subset? #{1} #{1 2})
+(clojure.set/superset? #{1 2} #{1 2})
+(clojure.set/subset? #{1 2} #{1 2})
+
+;; Intro to Destructuring
+;; (= [2 4] (let [[a b c d e] [0 1 2 3 4]] __))
+(= [2 4] (let [[a b c d e] [0 1 2 3 4]] (vector c e)))
+
