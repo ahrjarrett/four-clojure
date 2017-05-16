@@ -148,3 +148,29 @@
 ;; (= [2 4] (let [[a b c d e] [0 1 2 3 4]] __))
 (= [2 4] (let [[a b c d e] [0 1 2 3 4]] (vector c e)))
 
+;; Map Defaults
+;; Write a function which takes a default value and a sequence of keys and constructs a map.
+;; (= (__ 0 [:a :b :c]) {:a 0 :b 0 :c 0})
+;; (= (__ "x" [1 2 3]) {1 "x" 2 "x" 3 "x"})
+;; (= (__ [:a :b] [:foo :bar]) {:foo [:a :b] :bar [:a :b]})
+(defn cons-map
+  [default-val keys]
+  (zipmap keys (repeat default-val)))
+(= (cons-map 0 [:a :b :c]) {:a 0 :b 0 :c 0})
+(= (cons-map "x" [1 2 3]) {1 "x" 2 "x" 3 "x"})
+(= (cons-map [:a :b] [:foo :bar]) {:foo [:a :b] :bar [:a :b]})
+
+;; Last Element
+;; Write a function which returns the last element in a sequence.
+(defn last-one [s]
+  (if (empty? (rest s)) (first s)
+      (last-one (rest s))))
+
+;; This one uses tail-recursion
+(defn new-last-one [s]
+  (if (= (count s) 1) (first s)
+      (recur (rest s))))
+(= (new-last-one [1 2 3 4 5]) 5)
+(= (new-last-one '(5 4 3)) 3)
+(= (new-last-one ["b" "c" "d"]) "d")
+
