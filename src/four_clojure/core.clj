@@ -71,7 +71,46 @@
 (= 8 (#(+ % 5) 3))
 (= 8 ((partial + 5) 3))
 
+;; Double Down
+;; Write a function that doubles a number.
+(defn double-down [n] (* n 2))
+(double-down 8)
 
+;; Hello World
+;; Write a function which returns a personalized greeting.
+(defn greeting [name] (str "Hello, " name))
+(greeting "Grizzly") ;; => "Hello, Grizzly"
+(#(str "Hellow, " %) "Ash") ;; => "Hellow, Ash"
 
+;; Sequences: Map
+;; (= __ (map #(+ % 5) '(1 2 3)))
+(= (list 6 7 8) (map #(+ % 5) '(1 2 3)))
 
+;; Sequences: Filter
+;; (= __ (filter #(> % 5) '(3 4 5 6 7)))
+(= '(6 7) (filter #(> % 5) '(3 4 5 6 7)))
+
+;; Intro to Reduce
+;; (= 15 (reduce __ [1 2 3 4 5]))
+;; (=  0 (reduce __ []))
+;; (=  6 (reduce __ 1 [2 3]))
+(= 15 (reduce + [1 2 3 4 5]))
+(=  0 (reduce + []))
+(=  6 (reduce + 1 [2 3]))
+
+;; A nil key
+;; Write a function which, given a key and map, returns true iff the map contains an entry with that key and its value is nil.
+;; (true?  (__ :a {:a nil :b 2}))
+;; (false? (__ :b {:a nil :b 2}))
+;; (false? (__ :c {:a nil :b 2}))
+(defn nil-check [k m]
+  (if (and
+       (contains? m k)
+       (= (k m) nil))
+    true
+    false))
+
+(true?  (nil-check :a {:a nil :b 2})) ;; => true
+(false? (nil-check :b {:a nil :b 2})) ;; => true
+(false? (nil-check :c {:a nil :b 2})) ;; => true
 
