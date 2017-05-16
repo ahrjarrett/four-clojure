@@ -165,12 +165,48 @@
 (defn last-one [s]
   (if (empty? (rest s)) (first s)
       (last-one (rest s))))
-
-;; This one uses tail-recursion
+;; Or, using tail-recursion:
 (defn new-last-one [s]
   (if (= (count s) 1) (first s)
       (recur (rest s))))
 (= (new-last-one [1 2 3 4 5]) 5)
 (= (new-last-one '(5 4 3)) 3)
 (= (new-last-one ["b" "c" "d"]) "d")
+
+;; Penultimate Element
+;; Write a function which returns the second to last element from a sequence.
+(defn penultimate [coll]
+  (if (= (count coll) 2) (first coll)
+      (recur (rest coll))))
+(= (penultimate (list 1 2 3 4 5)) 4)
+(= (penultimate ["a" "b" "c"]) "b")
+(= (penultimate [[1 2] [3 4]]) [1 2])
+
+;; Nth Element
+;; Write a function which returns the Nth element from a sequence.
+(defn nth-element [coll n]
+  (if (zero? n)
+    (first coll)
+    (recur (rest coll) (- n 1))))
+
+(= (nth-element '(4 5 6 7) 2) 6)
+(= (nth-element [:a :b :c] 0) :a)
+(= (nth-element [1 2 3 4] 1) 2)
+(= (nth-element '([1 2] [3 4] [5 6]) 2) [5 6])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
