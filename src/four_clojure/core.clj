@@ -219,15 +219,13 @@
 ;; Find the odd numbers
 ;; Write a function which returns only the odd numbers from a sequence.
 (defn my-odd? [coll]
-  (filter (fn [item]
-            (if (not (= (/ item 2) 1))
-              item))
+  (filter #(= (mod % 2) 1)
           coll))
+
 (= (my-odd? #{1 2 3 4 5}) '(1 3 5))
-
-
-
-
+(= (my-odd? [4 2 1 6]) '(1))
+(= (my-odd? [2 2 4 6]) '())
+(= (my-odd? [1 1 1 3]) '(1 1 1 3))
 
 
 
