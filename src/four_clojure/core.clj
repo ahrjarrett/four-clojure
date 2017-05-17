@@ -206,7 +206,24 @@
 (= (count-seq "Hello World") 11)
 (= (count-seq [[1 2] [3 4] [5 6]]) 3)
 
+;; Sum It All Up
+;; Write a function which returns the sum of a sequence of numbers.
+(defn sum-it-all-up [coll]
+  (reduce + coll))
+(= (sum-it-all-up [1 2 3]) 6)
+(= (sum-it-all-up (list 0 -2 5 5)) 8)
+(= (sum-it-all-up #{4 2 1}) 7)
+(= (sum-it-all-up '(0 0 -1)) -1)
+(= (sum-it-all-up '(1 10 3)) 14)
 
+;; Find the odd numbers
+;; Write a function which returns only the odd numbers from a sequence.
+(defn my-odd? [coll]
+  (filter (fn [item]
+            (if (not (= (/ item 2) 1))
+              item))
+          coll))
+(= (my-odd? #{1 2 3 4 5}) '(1 3 5))
 
 
 
