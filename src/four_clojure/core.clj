@@ -195,6 +195,17 @@
 (= (nth-element '([1 2] [3 4] [5 6]) 2) [5 6])
 
 
+;; Count a Sequences
+;; Write a function which returns the total number of elements in a sequence.
+(defn count-seq [coll]
+  (loop [idx 0 c coll]
+    (if (empty? c) idx
+        (recur (inc idx) (rest c)))))
+
+(= (count-seq '(1 2 3 3 1)) 5)
+(= (count-seq "Hello World") 11)
+(= (count-seq [[1 2] [3 4] [5 6]]) 3)
+
 
 
 
