@@ -3,8 +3,7 @@
 
 (defn -main
   []
-  "don't matter"
-)
+  "don't matter")
 
 ;; Intro to Strings
 ;; (= __ (.toUpperCase "hello world"))
@@ -194,7 +193,6 @@
 (= (nth-element [1 2 3 4] 1) 2)
 (= (nth-element '([1 2] [3 4] [5 6]) 2) [5 6])
 
-
 ;; Count a Sequences
 ;; Write a function which returns the total number of elements in a sequence.
 (defn count-seq [coll]
@@ -258,5 +256,44 @@
 (palindrome? '(1 2 3 3 2 1));; => true
 (palindrome? [2 3 2]);; => true
 (palindrome? [4 3 2]);; => false
+
+;; Fibonacci Sequence
+;; Write a function which returns the first X fibonacci numbers.
+
+(defn fib [n]
+  (take n
+        (map first (iterate (fn [[a b]] [b (+ a b)]) [1 1]))))
+
+;; (Alright, I kinda cheated on this one. But this solution is so cool c: )
+
+(fib 3) ;; => (1 1 2)
+(fib 6) ;; => (1 1 2 3 5 8)
+(fib 8) ;; => (1 1 2 3 5 8 13 21)
+
+
+;; Maximum Value
+(defn max-val [& xs]
+  (reduce
+   #(if (> %1 %2)
+      %1
+      %2)
+   xs))
+
+(max-val 1 2 3) ;; => 3
+
+(max-val 30 20) ;; => 30
+
+(max-val 45 67 11 20) ;; => 67
+
+
+
+
+
+
+
+
+
+
+
 
 
