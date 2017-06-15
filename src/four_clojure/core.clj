@@ -237,6 +237,26 @@
 (my-reverse '(1 2 3 4 5)) ;; => (5 4 3 2 1)
 (my-reverse [1 2 3 4 5]) ;; => (5 4 3 2 1)
 
+;; We could make this even more condensed:
+#(reduce conj '() %)
 
+;; Palindrome Detector
+;; Write a function which returns true if the given sequence is a palindrome.
+
+;;(defn palindrome? [data]
+;;  (let [reversed (seq (apply str (reverse data)))
+;;        original (seq data)]
+;;    (do (println original reversed))
+;;    (= reversed original)))
+
+;; reverse returns a seq. I was making this wayyy too difficult.
+(defn palindrome? [data]
+  (= (seq data) (reverse data)))
+
+(palindrome? "racecar") ;; => true
+(palindrome? "racecars") ;; => false
+(palindrome? '(1 2 3 3 2 1));; => true
+(palindrome? [2 3 2]);; => true
+(palindrome? [4 3 2]);; => false
 
 
