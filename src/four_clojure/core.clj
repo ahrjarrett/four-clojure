@@ -227,11 +227,15 @@
 (= (my-odd? [2 2 4 6]) '())
 (= (my-odd? [1 1 1 3]) '(1 1 1 3))
 
+;; Reverse a Sequence
+;; Write a function which reverses a sequence.
+;; This one was fun!
 
+(defn my-reverse [coll]
+  (reduce conj () coll))
 
-
-
-
+(my-reverse '(1 2 3 4 5)) ;; => (5 4 3 2 1)
+(my-reverse [1 2 3 4 5]) ;; => (5 4 3 2 1)
 
 
 
