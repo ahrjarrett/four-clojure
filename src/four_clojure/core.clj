@@ -280,20 +280,19 @@
    xs))
 
 (max-val 1 2 3) ;; => 3
-
 (max-val 30 20) ;; => 30
-
 (max-val 45 67 11 20) ;; => 67
 
 
+;; Get the Caps
+;; Write a function which takes a string and returns
+;; a new string containing only the capital letters.
 
 
+(def get-caps (fn [s]
+                (apply str (re-seq #"[A-Z]" s))))
 
-
-
-
-
-
-
-
+(get-caps "HeLlO, WoRlD!")
+(get-caps "nothing")
+(get-caps "$#A(*&987Zf")
 
