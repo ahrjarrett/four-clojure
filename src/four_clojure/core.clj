@@ -196,13 +196,19 @@
 ;; Count a Sequences
 ;; Write a function which returns the total number of elements in a sequence.
 (defn count-seq [coll]
-  (loop [idx 0 c coll]
-    (if (empty? c) idx
-        (recur (inc idx) (rest c)))))
+  (loop [total 0 c coll]
+    (if (empty? c) total
+        (recur (inc total) (rest c)))))
 
 (= (count-seq '(1 2 3 3 1)) 5)
 (= (count-seq "Hello World") 11)
 (= (count-seq [[1 2] [3 4] [5 6]]) 3)
+
+;; Here's count-seq as a reduction:
+(defn reduce-count-seq [coll]
+  (reduce (fn [a _] (inc a)) 0 coll))
+
+(reduce-count-seq '(1 2 3 4)) ;; => 4
 
 ;; Sum It All Up
 ;; Write a function which returns the sum of a sequence of numbers.
@@ -288,11 +294,29 @@
 ;; Write a function which takes a string and returns
 ;; a new string containing only the capital letters.
 
-
 (def get-caps (fn [s]
                 (apply str (re-seq #"[A-Z]" s))))
 
 (get-caps "HeLlO, WoRlD!")
 (get-caps "nothing")
 (get-caps "$#A(*&987Zf")
+
+
+;; Duplicate a Sequence
+;; Write a function which duplicates each element of a sequence.
+(defn dup [coll]
+  (mapcat (fn [x] [x x]) coll))
+(dup [1 2 3]) ;; => (1 1 2 2 3 3)
+
+;; Implement Range
+;; Write a function which creates a list of all integers in a given range.
+(defn my-range [start end]
+  (loop [s start c []]
+    (if (<= end s) c
+      (recur (inc s) (conj c s)))))
+
+(my-range 1 5) ;; => (1 2 3 4)
+
+;; This one works, but I'm not a huge fan:
+(#(take (- %2 %1) (iterate inc %1)) 5 13)
 
