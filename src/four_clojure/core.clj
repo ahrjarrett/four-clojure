@@ -301,7 +301,6 @@
 (get-caps "nothing")
 (get-caps "$#A(*&987Zf")
 
-
 ;; Duplicate a Sequence
 ;; Write a function which duplicates each element of a sequence.
 (defn dup [coll]
@@ -313,10 +312,31 @@
 (defn my-range [start end]
   (loop [s start c []]
     (if (<= end s) c
-      (recur (inc s) (conj c s)))))
+        (recur (inc s) (conj c s)))))
 
 (my-range 1 5) ;; => (1 2 3 4)
 
 ;; This one works, but I'm not a huge fan:
 (#(take (- %2 %1) (iterate inc %1)) 5 13)
+
+;; Factorial
+;; Write a function that calculates factorials.
+(defn factorial [n]
+  (reduce * 1 (range 1 (inc n))))
+
+(factorial 6) ;; => 720
+
+;; Or here's a fun one:
+(#(->> %
+       inc
+       range
+       rest
+       (reduce *)) 18)
+
+;; Iterate
+;; The iterate function can be used to produce an infinite lazy sequence.
+;; (iterate f x)
+;; x returns a lazy sequence of x, (f x), (f (f x)) etc.
+(take 5 (iterate #(+ 3 %) 1)) ;; => (1 4 7 10 13)
+
 
