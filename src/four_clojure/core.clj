@@ -339,4 +339,39 @@
 ;; x returns a lazy sequence of x, (f x), (f (f x)) etc.
 (take 5 (iterate #(+ 3 %) 1)) ;; => (1 4 7 10 13)
 
+;; Flip (Medium)
+; Write a higher-order function which flips the order of the arguments of an input function.
 
+(defn flip [f]
+  (fn [a b] (f b a)))
+
+; Or, passed as a lambda fn:
+;#(fn [a b] (% b a))
+
+(= 3 ((flip nth) 2 [1 2 3 4 5]))
+(= true ((flip >) 7 8))
+(= 4 ((flip quot) 2 8))
+(= [1 2 3] ((flip take) [1 2 3 4 5] 3))
+
+;; #43: Reverse Interleave (Medium)
+;; Write a function which reverses the interleave process into x number of subsequences.
+
+;;(defn reverse-interleave [seq leaves]
+;;  (take (/ (count seq) leaves) seq)
+;;   )
+
+(defn reverse-interleave [seq n]
+  (apply map vector (partition n seq)))
+
+(reverse-interleave [1 2 3 4 5 6] 2) ;; => ([1 3 5] [2 4 6])
+(reverse-interleave (range 9) 3) ;; => ([0 3 6] [1 4 7] [2 5 8])
+(= (reverse-interleave [1 2 3 4 5 6] 2) '((1 3 5) (2 4 6))) ;; => true
+(= (reverse-interleave (range 9) 3) '((0 3 6) (1 4 7) (2 5 8))) ;; => true
+(= (reverse-interleave (range 10) 5) '((0 5) (1 6) (2 7) (3 8) (4 9))) ;; => true
+
+
+;; QuickSort in Clojure
+(defn rand-numbers [n]
+  (take n (repeatedly #(rand-int 100))))
+
+(rand-numbers 100) ;; => (93 2 32 94 ...)
