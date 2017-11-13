@@ -5,49 +5,74 @@
   []
   "don't matter")
 
-;; Intro to Strings
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; *** INDEPENDENT STUDY: QuickSort in Clojure *** ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; INCOMPLETE as of 11/12/17
+(defn rand-numbers [n]
+  (take n (repeatedly #(rand-int 100))))
+
+(rand-numbers 100) ;; => (93 2 32 94 ...)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; *** ELEMENTARY *** ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; #3: Intro to Strings
 ;; (= __ (.toUpperCase "hello world"))
 (= "HELLO WORLD" (.toUpperCase "hello world"))
 
-;; Intro to Lists
+
+;; #4: Intro to Lists
 ;; (= (list __) '(:a :b :c))
 (= (list :a :b :c) '(:a :b :c))
 
-;; Lists: conj
+
+;; #5: Lists: conj
 ;; (= __ (conj '(2 3 4) 1))
 ;; (= __ (conj '(3 4) 2 1))
 (= (list 1 2 3 4) (conj '(2 3 4) 1))
 (= (list 1 2 3 4) (conj '(3 4) 2 1))
 
-;; Intro to Vectors
+
+;; #6: Intro to Vectors
 ;; (= [__] (list :a :b :c) (vec '(:a :b :c)) (vector :a :b :c))
 (= [:a :b :c] (list :a :b :c) (vec '(:a :b :c)) (vector :a :b :c))
 
-;; Vectors: conj
+;; #7: Vectors: conj
 ;; (= __ (conj [1 2 3] 4))
 (= (vec '(1 2 3 4)) (conj [1 2 3] 4))
 
-;; Intro to Sets
+
+;; #8: Intro to Sets
 ;; (= __ (set '(:a :a :b :c :c :c :c :d :d)))
 ;; (= __ (clojure.set/union #{:a :b :c} #{:b :c :d}))
 (= #{:a :b :c :d} (set '(:a :a :b :c :c :c :c :d :d)))
 (= #{:a :b :c :d} (clojure.set/union #{:a :b :c} #{:b :c :d}))
 
-;; Sets: conj
+
+;; #9: Sets: conj
 ;; (= #{1 2 3 4} (conj #{1 4 3} __))
 (= #{1 2 3 4} (conj #{1 4 3} 2))
 
-;; Intro to Maps
+
+;; #10: Intro to Maps
 ;; (= __ ((hash-map :a 10, :b 20, :c 30) :b))
 ;; (= __ (:b {:a 10, :b 20, :c 30}))
 (= 20 ((hash-map :a 10, :b 20, :c 30) :b))
 (= 20 (:b {:a 10, :b 20, :c 30}))
 
-;; Maps: conj
+
+;; #11: Maps: conj
 ;; (= {:a 1, :b 2, :c 3} (conj {:a 1} __ [:c 3]))
 (= {:a 1, :b 2, :c 3} (conj {:a 1} [:b 2] [:c 3]))
 
-;; Intro to Sequences
+
+;; #12: Intro to Sequences
 ;; (= __ (first '(3 2 1)))
 ;; (= __ (second [2 3 4]))
 ;; (= __ (last (list 1 2 3)))
@@ -55,11 +80,13 @@
 (= 3 (second [2 3 4]))
 (= 3 (last (list 1 2 3)))
 
-;; Sequences: Rest
+
+;; #13: Sequences: Rest
 ;; (= __ (rest [10 20 30 40]))
 (= [20 30 40] (rest [10 20 30 40]))
 
-;; Intro to Functions
+
+;; #14: Intro to Functions
 ;; (= __ ((fn add-five [x] (+ x 5)) 3))
 ;; (= __ ((fn add-five [x] (+ x 5)) 3))
 ;; (= __ ((fn [x] (+ x 5)) 3))
@@ -70,26 +97,31 @@
 (= 8 (#(+ % 5) 3))
 (= 8 ((partial + 5) 3))
 
-;; Double Down
+
+;; #15: Double Down
 ;; Write a function that doubles a number.
 (defn double-down [n] (* n 2))
 (double-down 8)
 
-;; Hello World
+
+;; #16: Hello World
 ;; Write a function which returns a personalized greeting.
 (defn greeting [name] (str "Hello, " name))
 (greeting "Grizzly") ;; => "Hello, Grizzly"
 (#(str "Hellow, " %) "Ash") ;; => "Hellow, Ash"
 
-;; Sequences: Map
+
+;; #17: Sequences: Map
 ;; (= __ (map #(+ % 5) '(1 2 3)))
 (= (list 6 7 8) (map #(+ % 5) '(1 2 3)))
 
-;; Sequences: Filter
+
+;; #18: Sequences: Filter
 ;; (= __ (filter #(> % 5) '(3 4 5 6 7)))
 (= '(6 7) (filter #(> % 5) '(3 4 5 6 7)))
 
-;; Intro to Reduce
+
+;; #64: Intro to Reduce
 ;; (= 15 (reduce __ [1 2 3 4 5]))
 ;; (=  0 (reduce __ []))
 ;; (=  6 (reduce __ 1 [2 3]))
@@ -97,7 +129,8 @@
 (=  0 (reduce + []))
 (=  6 (reduce + 1 [2 3]))
 
-;; A nil key
+
+;; #134: A nil key
 ;; Write a function which, given a key and map, returns true iff the map contains an entry with that key and its value is nil.
 ;; (true?  (__ :a {:a nil :b 2}))
 ;; (false? (__ :b {:a nil :b 2}))
@@ -113,7 +146,7 @@
 (false? (nil-check :b {:a nil :b 2})) ;; => true
 (false? (nil-check :c {:a nil :b 2})) ;; => true
 
-;; Logical falsity and truth
+;; #162: Logical falsity and truth
 ;; In Clojure, only nil and false represent the values of logical falsity in conditional tests - anything else is logical truth.
 ;; (= __ (if-not false 1 0))
 ;; (= __ (if-not nil 1 0))
@@ -122,7 +155,6 @@
 ;; (= __ (if [0] 1 0))
 ;; (= __ (if 0 1 0))
 ;; (= __ (if 1 1 0))
-
 (= 1 (if-not false 1 0))
 (= 1 (if-not nil 1 0))
 (= 1 (if true 1 0))
@@ -131,23 +163,25 @@
 (= 1 (if 0 1 0))
 (= 1 (if 1 1 0))
 
-;; Subset and Superset
+
+;; #161: Subset and Superset
 ;; Set A is a subset of set B, or equivalently B is a superset of A, if A is "contained" inside B. A and B may coincide.
 ;; (clojure.set/superset? #{1 2} #{2})
 ;; (clojure.set/subset? #{1} __)
 ;; (clojure.set/superset? __ #{1 2})
 ;; (clojure.set/subset? #{1 2} __)
+(clojure.set/superset? #{1 2} #{2}) ;; => true
+(clojure.set/subset? #{1} #{1 2}) ;; => true
+(clojure.set/superset? #{1 2} #{1 2}) ;; => true
+(clojure.set/subset? #{1 2} #{1 2}) ;; => true
 
-(clojure.set/superset? #{1 2} #{2})
-(clojure.set/subset? #{1} #{1 2})
-(clojure.set/superset? #{1 2} #{1 2})
-(clojure.set/subset? #{1 2} #{1 2})
 
-;; Intro to Destructuring
+;; #52: Intro to Destructuring
 ;; (= [2 4] (let [[a b c d e] [0 1 2 3 4]] __))
-(= [2 4] (let [[a b c d e] [0 1 2 3 4]] (vector c e)))
+(= [2 4] (let [[a b c d e] [0 1 2 3 4]] (vector c e))) ;; => true
 
-;; Map Defaults
+
+;; #156: Map Defaults
 ;; Write a function which takes a default value and a sequence of keys and constructs a map.
 ;; (= (__ 0 [:a :b :c]) {:a 0 :b 0 :c 0})
 ;; (= (__ "x" [1 2 3]) {1 "x" 2 "x" 3 "x"})
@@ -159,7 +193,12 @@
 (= (cons-map "x" [1 2 3]) {1 "x" 2 "x" 3 "x"})
 (= (cons-map [:a :b] [:foo :bar]) {:foo [:a :b] :bar [:a :b]})
 
-;; Last Element
+
+;;;;;;;;;;;;;;;;;;
+;; *** EASY *** ;;
+;;;;;;;;;;;;;;;;;;
+
+;; #19: Last Element
 ;; Write a function which returns the last element in a sequence.
 (defn last-one [s]
   (if (empty? (rest s)) (first s)
@@ -172,7 +211,8 @@
 (= (new-last-one '(5 4 3)) 3)
 (= (new-last-one ["b" "c" "d"]) "d")
 
-;; Penultimate Element
+
+;; #20: Penultimate Element
 ;; Write a function which returns the second to last element from a sequence.
 (defn penultimate [coll]
   (if (= (count coll) 2) (first coll)
@@ -181,25 +221,25 @@
 (= (penultimate ["a" "b" "c"]) "b")
 (= (penultimate [[1 2] [3 4]]) [1 2])
 
-;; Nth Element
+
+;; #21: Nth Element
 ;; Write a function which returns the Nth element from a sequence.
 (defn nth-element [coll n]
   (if (zero? n)
     (first coll)
     (recur (rest coll) (- n 1))))
-
 (= (nth-element '(4 5 6 7) 2) 6)
 (= (nth-element [:a :b :c] 0) :a)
 (= (nth-element [1 2 3 4] 1) 2)
 (= (nth-element '([1 2] [3 4] [5 6]) 2) [5 6])
 
-;; Count a Sequences
+
+;; #22: Count a Sequence
 ;; Write a function which returns the total number of elements in a sequence.
 (defn count-seq [coll]
   (loop [total 0 c coll]
     (if (empty? c) total
         (recur (inc total) (rest c)))))
-
 (= (count-seq '(1 2 3 3 1)) 5)
 (= (count-seq "Hello World") 11)
 (= (count-seq [[1 2] [3 4] [5 6]]) 3)
@@ -207,10 +247,10 @@
 ;; Here's count-seq as a reduction:
 (defn reduce-count-seq [coll]
   (reduce (fn [a _] (inc a)) 0 coll))
-
 (reduce-count-seq '(1 2 3 4)) ;; => 4
 
-;; Sum It All Up
+
+;; #24: Sum It All Up
 ;; Write a function which returns the sum of a sequence of numbers.
 (defn sum-it-all-up [coll]
   (reduce + coll))
@@ -220,149 +260,148 @@
 (= (sum-it-all-up '(0 0 -1)) -1)
 (= (sum-it-all-up '(1 10 3)) 14)
 
-;; Find the odd numbers
+
+;; #25: Find the odd numbers
 ;; Write a function which returns only the odd numbers from a sequence.
 (defn my-odd? [coll]
   (filter #(= (mod % 2) 1)
           coll))
-
 (= (my-odd? #{1 2 3 4 5}) '(1 3 5))
 (= (my-odd? [4 2 1 6]) '(1))
 (= (my-odd? [2 2 4 6]) '())
 (= (my-odd? [1 1 1 3]) '(1 1 1 3))
 
-;; Reverse a Sequence
+
+;; #23: Reverse a Sequence
 ;; Write a function which reverses a sequence.
 ;; This one was fun!
-
 (defn my-reverse [coll]
   (reduce conj () coll))
-
 (my-reverse '(1 2 3 4 5)) ;; => (5 4 3 2 1)
 (my-reverse [1 2 3 4 5]) ;; => (5 4 3 2 1)
-
 ;; We could make this even more condensed:
 #(reduce conj '() %)
 
-;; Palindrome Detector
-;; Write a function which returns true if the given sequence is a palindrome.
 
+;; #27: Palindrome Detector
+;; Write a function which returns true if the given sequence is a palindrome.
+;; Old Attempt:
 ;;(defn palindrome? [data]
 ;;  (let [reversed (seq (apply str (reverse data)))
 ;;        original (seq data)]
 ;;    (do (println original reversed))
 ;;    (= reversed original)))
-
-;; reverse returns a seq. I was making this wayyy too difficult.
+;; AHH. reverse returns a seq. I was making this wayy too difficult.
 (defn palindrome? [data]
   (= (seq data) (reverse data)))
-
 (palindrome? "racecar") ;; => true
 (palindrome? "racecars") ;; => false
 (palindrome? '(1 2 3 3 2 1));; => true
 (palindrome? [2 3 2]);; => true
 (palindrome? [4 3 2]);; => false
 
-;; Fibonacci Sequence
-;; Write a function which returns the first X fibonacci numbers.
 
+;; #26: Fibonacci Sequence
+;; Write a function which returns the first X fibonacci numbers.
 (defn fib [n]
   (take n
         (map first (iterate (fn [[a b]] [b (+ a b)]) [1 1]))))
-
 ;; (Alright, I kinda cheated on this one. But this solution is so cool c: )
-
 (fib 3) ;; => (1 1 2)
 (fib 6) ;; => (1 1 2 3 5 8)
 (fib 8) ;; => (1 1 2 3 5 8 13 21)
 
 
-;; Maximum Value
+;; #38: Maximum Value
 (defn max-val [& xs]
   (reduce
    #(if (> %1 %2)
       %1
       %2)
    xs))
-
 (max-val 1 2 3) ;; => 3
 (max-val 30 20) ;; => 30
 (max-val 45 67 11 20) ;; => 67
 
 
-;; Get the Caps
+;; #29: Get the Caps
 ;; Write a function which takes a string and returns
 ;; a new string containing only the capital letters.
-
 (def get-caps (fn [s]
                 (apply str (re-seq #"[A-Z]" s))))
-
 (get-caps "HeLlO, WoRlD!")
 (get-caps "nothing")
 (get-caps "$#A(*&987Zf")
 
-;; Duplicate a Sequence
+
+;; #32: Duplicate a Sequence
 ;; Write a function which duplicates each element of a sequence.
 (defn dup [coll]
   (mapcat (fn [x] [x x]) coll))
 (dup [1 2 3]) ;; => (1 1 2 2 3 3)
 
-;; Implement Range
+
+;; #34: Implement Range
 ;; Write a function which creates a list of all integers in a given range.
 (defn my-range [start end]
   (loop [s start c []]
     (if (<= end s) c
         (recur (inc s) (conj c s)))))
-
 (my-range 1 5) ;; => (1 2 3 4)
-
-;; This one works, but I'm not a huge fan:
+;; This solution also works, but I'm not a huge fan:
 (#(take (- %2 %1) (iterate inc %1)) 5 13)
 
-;; Factorial
+
+;; #30: Compress a Sequence
+;; Write a function which removes consecutive duplicates from a sequence.
+(defn compress-seq [seq]
+  seq
+
+  )
+
+(apply str (compress-seq "Leeeeeerrroyyy")) ;; => "Leroy"
+
+
+;; #48: Intro to Some
+;; SOME takes a predicate fn and a collection,
+;; returning the first true value of (predicate x)
+(= 6 (some #{2 7 6} [5 6 7 8]))
+(= 6 (some #(when (even? %) %) [5 6 7 8]))
+
+
+;; #42: Factorial
 ;; Write a function that calculates factorials.
 (defn factorial [n]
   (reduce * 1 (range 1 (inc n))))
-
 (factorial 6) ;; => 720
-
-;; Or here's a fun one:
+;; Or here's a fun one;
+;; have to inc the arg because range does not include its upper range in returned seq
 (#(->> %
        inc
        range
        rest
        (reduce *)) 18)
 
-;; Iterate
+
+;; #45: Iterate
 ;; The iterate function can be used to produce an infinite lazy sequence.
 ;; (iterate f x)
 ;; x returns a lazy sequence of x, (f x), (f (f x)) etc.
 (take 5 (iterate #(+ 3 %) 1)) ;; => (1 4 7 10 13)
 
-;; Flip (Medium)
-; Write a higher-order function which flips the order of the arguments of an input function.
 
-(defn flip [f]
-  (fn [a b] (f b a)))
+;;;;;;;;;;;;;;;;;;;;
+;; *** MEDIUM *** ;;
+;;;;;;;;;;;;;;;;;;;;
 
-; Or, passed as a lambda fn:
-;#(fn [a b] (% b a))
-
-(= 3 ((flip nth) 2 [1 2 3 4 5]))
-(= true ((flip >) 7 8))
-(= 4 ((flip quot) 2 8))
-(= [1 2 3] ((flip take) [1 2 3 4 5] 3))
-
-;; #43: Reverse Interleave (Medium)
+;; #43: Reverse Interleave
 ;; Write a function which reverses the interleave process into x number of subsequences.
-
+;; Old Attempt:
 ;;(defn reverse-interleave [seq leaves]
 ;;  (take (/ (count seq) leaves) seq)
 ;;   )
-
 (defn reverse-interleave [seq n]
   (apply map vector (partition n seq)))
-
 (reverse-interleave [1 2 3 4 5 6] 2) ;; => ([1 3 5] [2 4 6])
 (reverse-interleave (range 9) 3) ;; => ([0 3 6] [1 4 7] [2 5 8])
 (= (reverse-interleave [1 2 3 4 5 6] 2) '((1 3 5) (2 4 6))) ;; => true
@@ -370,8 +409,30 @@
 (= (reverse-interleave (range 10) 5) '((0 5) (1 6) (2 7) (3 8) (4 9))) ;; => true
 
 
-;; QuickSort in Clojure
-(defn rand-numbers [n]
-  (take n (repeatedly #(rand-int 100))))
+;; #46 Flip
+; Write a higher-order function which flips the order of the arguments of an input function.
+(defn flip [f]
+  (fn [a b] (f b a)))
+;; Or, passed as a lambda fn:
+;;#(fn [a b] (% b a))
+(= 3 ((flip nth) 2 [1 2 3 4 5]))
+(= true ((flip >) 7 8))
+(= 4 ((flip quot) 2 8))
+(= [1 2 3] ((flip take) [1 2 3 4 5] 3))
 
-(rand-numbers 100) ;; => (93 2 32 94 ...)
+
+
+
+
+
+
+
+
+
+
+;; CURRENTLY WORKING ON:
+(defn compress-seq [seq]
+  seq
+  )
+(apply str (compress-seq "Leeeeeerrroyyy")) ;; => "Leroy"
+
