@@ -312,16 +312,28 @@
 (fib 8) ;; => (1 1 2 3 5 8 13 21)
 
 
-;; #38: Maximum Value
-(defn max-val [& xs]
-  (reduce
-   #(if (> %1 %2)
-      %1
-      %2)
-   xs))
-(max-val 1 2 3) ;; => 3
-(max-val 30 20) ;; => 30
-(max-val 45 67 11 20) ;; => 67
+;; #28: Flatten a Sequence
+;; Write a function which flattens a sequence.
+;; http://www.4clojure.com/problem/28
+
+;; WHEN-LET: https://clojuredocs.org/clojure.core/when-let
+;; From the docs: Very useful when working with sequences. Capturing the return value 
+;; of `seq` brings a performance gain in subsequent `first`/`rest`/`next`
+;; calls. Also the block is guarded by `nil` punning.
+
+;; CONS vs CONJ vs CONCAT vs LIST vs LIST*?
+;; https://gist.github.com/noahlz/5510191
+(defn flat [coll]
+  (lazy-seq
+   (when-let [s (seq coll)]
+     (if (coll? (first s))
+       (concat (flat (first s)) (flat (rest s)))
+       (cons (first s) (flat (rest s)))))))
+
+(= (flat '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6)) ;; true
+(= (flat ["a" ["b"] "c"]) '("a" "b" "c")) ;; true
+(= (flat '((((:a))))) '(:a)) ;; true
+(= (flat '({:a 3})) '(:a 3))
 
 
 ;; #29: Get the Caps
@@ -351,6 +363,17 @@
 (dup [1 2 3]) ;; => (1 1 2 2 3 3)
 
 
+;; #33: Replicate a Sequence
+;; Write a function which replicates each element of a sequence a variable number of times.
+;; MAPCAT: https://clojuredocs.org/clojure.core/mapcat
+(defn replicate-seq [s n] (mapcat #(repeat n %) s))
+(= (replicate-seq [1 2 3] 2) '(1 1 2 2 3 3))
+(= (replicate-seq [:a :b] 4) '(:a :a :a :a :b :b :b :b))
+(= (replicate-seq [4 5 6] 1) '(4 5 6))
+(= (replicate-seq [[1 2] [3 4]] 2) '([1 2] [1 2] [3 4] [3 4]))
+(= (replicate-seq [44 33] 2) [44 44 33 33])
+
+
 ;; #34: Implement Range
 ;; Write a function which creates a list of all integers in a given range.
 (defn my-range [start end]
@@ -360,6 +383,18 @@
 (my-range 1 5) ;; => (1 2 3 4)
 ;; This solution also works, but I'm not a huge fan:
 (#(take (- %2 %1) (iterate inc %1)) 5 13)
+
+
+;; #38: Maximum Value
+(defn max-val [& xs]
+  (reduce
+   #(if (> %1 %2)
+      %1
+      %2)
+   xs))
+(max-val 1 2 3) ;; => 3
+(max-val 30 20) ;; => 30
+(max-val 45 67 11 20) ;; => 67
 
 
 ;; #42: Factorial
