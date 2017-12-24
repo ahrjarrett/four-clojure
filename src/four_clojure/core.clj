@@ -6,7 +6,6 @@
   "don't matter")
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; *** INDEPENDENT STUDY: QuickSort in Clojure *** ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -367,11 +366,11 @@
 ;; Write a function which replicates each element of a sequence a variable number of times.
 ;; MAPCAT: https://clojuredocs.org/clojure.core/mapcat
 (defn replicate-seq [s n] (mapcat #(repeat n %) s))
-(= (replicate-seq [1 2 3] 2) '(1 1 2 2 3 3))
-(= (replicate-seq [:a :b] 4) '(:a :a :a :a :b :b :b :b))
-(= (replicate-seq [4 5 6] 1) '(4 5 6))
-(= (replicate-seq [[1 2] [3 4]] 2) '([1 2] [1 2] [3 4] [3 4]))
-(= (replicate-seq [44 33] 2) [44 44 33 33])
+(= (replicate-seq [1 2 3] 2) '(1 1 2 2 3 3)) ;; true
+(= (replicate-seq [:a :b] 4) '(:a :a :a :a :b :b :b :b)) ;; true
+(= (replicate-seq [4 5 6] 1) '(4 5 6)) ;; true
+(= (replicate-seq [[1 2] [3 4]] 2) '([1 2] [1 2] [3 4] [3 4])) ;; true
+(= (replicate-seq [44 33] 2) [44 44 33 33]) ;; true 
 
 
 ;; #34: Implement Range
@@ -397,25 +396,52 @@
 (max-val 45 67 11 20) ;; => 67
 
 
+;; #40: Interpose a Seq
+;; Write a function which separates the items of a sequence by an arbitrary value.
+;; http://www.4clojure.com/problem/40
+(defn interpose-seq [joiner coll]
+  (apply str (butlast (mapcat #(vector % joiner) coll))))
+(interpose-seq ", " ["first" "second" "third"]) ;; "first, second, third"
+(= (interpose-seq 0 [1 2 3]) [1 0 2 0 3]) ;; true
+(= (apply str (interpose-seq ", " ["one" "two" "three"])) "one, two, three") ;; true
+(= (interpose-seq :z [:a :b :c :d]) [:a :z :b :z :c :z :d]) ;; true
+
+
 ;; #42: Factorial
 ;; Write a function that calculates factorials.
 (defn factorial [n]
   (reduce * 1 (range 1 (inc n))))
 (factorial 6) ;; => 720
+
 ;; Or here's a fun one;
 ;; have to inc the arg because range does not include its upper range in returned seq
 (#(->> %
        inc
        range
        rest
-       (reduce *)) 18)
-
+       (reduce *)) 18) ; 6402373705728000
 
 ;; #45: Iterate
 ;; The iterate function can be used to produce an infinite lazy sequence.
 ;; (iterate f x)
 ;; x returns a lazy sequence of x, (f x), (f (f x)) etc.
 (take 5 (iterate #(+ 3 %) 1)) ;; => (1 4 7 10 13)
+
+
+;; #47: Contain Yourself
+;; The contains? function checks if a KEY is present in a given collection. This often leads beginner clojurians to use it incorrectly with numerically indexed collections like vectors and lists.
+;; Answer: 4
+(contains? #{4 5 6} 4)
+(contains? [1 1 1 1 1] 4)
+(contains? {4 :a 2 :b} 4)
+(not (contains? [1 2 4] 4))
+
+
+;; #48: Intro to Some
+;; SOME takes a predicate fn and a collection,
+;; returning the first true value of (predicate x)
+(= 6 (some #{2 7 6} [5 6 7 8]))
+(= 6 (some #(when (even? %) %) [5 6 7 8]))
 
 
 ;;;;;;;;;;;;;;;;;;;;
@@ -448,9 +474,3 @@
 (= 4 ((flip quot) 2 8))
 (= [1 2 3] ((flip take) [1 2 3 4 5] 3))
 
-
-;; #48: Intro to Some
-;; SOME takes a predicate fn and a collection,
-;; returning the first true value of (predicate x)
-(= 6 (some #{2 7 6} [5 6 7 8]))
-(= 6 (some #(when (even? %) %) [5 6 7 8]))
