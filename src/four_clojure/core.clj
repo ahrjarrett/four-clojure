@@ -355,6 +355,16 @@
 (apply str (compress-seq "Leeeeeerrroyyy")) ;; => "Leroy"
 
 
+;; #31: Pack a Sequence
+;; Write a function which packs consecutive duplicates into sub-lists.
+;; http://www.4clojure.com/problem/31
+(defn pack-a-seq [coll]
+  (partition-by identity coll))
+(pack-a-seq [1 1 2 1 1 1 3 3]) '((1 1) (2) (1 1 1) (3 3)) ;; '((1 1) (2) (1 1 1) (3 3))
+(pack-a-seq [:a :a :b :b :c]) '((:a :a) (:b :b) (:c)) ;; '((:a :a) (:b :b) (:c))
+(pack-a-seq [[1 2] [1 2] [3 4]]) '(([1 2] [1 2]) ([3 4])) ;; '(([1 2] [1 2]) ([3 4]))
+
+
 ;; #32: Duplicate a Sequence
 ;; Write a function which duplicates each element of a sequence.
 (defn dup [coll]
@@ -407,6 +417,22 @@
 (= (interpose-seq :z [:a :b :c :d]) [:a :z :b :z :c :z :d]) ;; true
 
 
+;; #41: Drop Every Nth Item
+;; Write a function which drops every Nth item from a sequence.
+;; http://www.4clojure.com/problem/41
+
+;; PARTITION-ALL: How is it different than partition?
+;; Returns a lazy sequence of lists like partition, **but may include
+;; partitions with fewer than n items at the end**.  Returns a stateful
+;; transducer when no collection is provided.
+(defn drop-nth [coll n]
+  (apply concat (partition-all (dec n) n coll)))
+(drop-nth [5 6 7 8 9] 3) ;; [5 6 7 9]
+(= (drop-nth [1 2 3 4 5 6 7 8] 3) [1 2 4 5 7 8]) ;; true
+(= (drop-nth [:a :b :c :d :e :f] 2) [:a :c :e]) ;; true
+(= (drop-nth [1 2 3 4 5 6] 4) [1 2 3 5 6]) ;; true
+
+
 ;; #42: Factorial
 ;; Write a function that calculates factorials.
 (defn factorial [n]
@@ -442,6 +468,19 @@
 ;; returning the first true value of (predicate x)
 (= 6 (some #{2 7 6} [5 6 7 8]))
 (= 6 (some #(when (even? %) %) [5 6 7 8]))
+
+
+;; #49: Split a Sequence
+;; Write a function which will split a sequence into two parts.
+;; http://www.4clojure.com/problem/49
+;; Note: Solved, but there must be a better way than doing two INTOs
+(defn split-seq [n coll]
+  (into [] (map #(into []  %) (split-at n coll))))
+(split-seq 3 [1 2 3 4 5 6]) ;; [[1 2 3] [4 5 6]]
+(split-seq 1 [:a :b :c :d]) ;; [[:a] [:b :c :d]]
+(= (split-seq 3 [1 2 3 4 5 6]) [[1 2 3] [4 5 6]]) ;; true
+(= (split-seq 1 [:a :b :c :d]) [[:a] [:b :c :d]]) ;; true
+(= (split-seq 2 [[1 2] [3 4] [5 6]]) [[[1 2] [3 4]] [[5 6]]]) ;; true
 
 
 ;;;;;;;;;;;;;;;;;;;;
