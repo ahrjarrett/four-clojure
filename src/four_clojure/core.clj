@@ -334,6 +334,16 @@
 (get-caps "$#A(*&987Zf")
 
 
+;; #30 Compress a Sequence
+;; Write a function which removes consecutive duplicates from a sequence.
+(defn compress-seq [seq]
+  (map first (partition-by identity seq)))
+;; PARTITION-BY: https://clojuredocs.org/clojure.core/partition-by
+(compress-seq "leeeroy") ;; (\l \e \r \o \y)
+(apply str (#(map first (partition-by identity %)) "hooowdy")) ;; "howdy"
+(apply str (compress-seq "Leeeeeerrroyyy")) ;; => "Leroy"
+
+
 ;; #32: Duplicate a Sequence
 ;; Write a function which duplicates each element of a sequence.
 (defn dup [coll]
@@ -350,23 +360,6 @@
 (my-range 1 5) ;; => (1 2 3 4)
 ;; This solution also works, but I'm not a huge fan:
 (#(take (- %2 %1) (iterate inc %1)) 5 13)
-
-
-;; #30: Compress a Sequence
-;; Write a function which removes consecutive duplicates from a sequence.
-(defn compress-seq [seq]
-  seq
-
-  )
-
-(apply str (compress-seq "Leeeeeerrroyyy")) ;; => "Leroy"
-
-
-;; #48: Intro to Some
-;; SOME takes a predicate fn and a collection,
-;; returning the first true value of (predicate x)
-(= 6 (some #{2 7 6} [5 6 7 8]))
-(= 6 (some #(when (even? %) %) [5 6 7 8]))
 
 
 ;; #42: Factorial
@@ -413,26 +406,16 @@
 ; Write a higher-order function which flips the order of the arguments of an input function.
 (defn flip [f]
   (fn [a b] (f b a)))
-;; Or, passed as a lambda fn:
-;;#(fn [a b] (% b a))
+;; Or, as a lambda fn:
+#(fn [a b] (% b a))
 (= 3 ((flip nth) 2 [1 2 3 4 5]))
 (= true ((flip >) 7 8))
 (= 4 ((flip quot) 2 8))
 (= [1 2 3] ((flip take) [1 2 3 4 5] 3))
 
 
-
-
-
-
-
-
-
-
-
-;; CURRENTLY WORKING ON:
-(defn compress-seq [seq]
-  seq
-  )
-(apply str (compress-seq "Leeeeeerrroyyy")) ;; => "Leroy"
-
+;; #48: Intro to Some
+;; SOME takes a predicate fn and a collection,
+;; returning the first true value of (predicate x)
+(= 6 (some #{2 7 6} [5 6 7 8]))
+(= 6 (some #(when (even? %) %) [5 6 7 8]))
