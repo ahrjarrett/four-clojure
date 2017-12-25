@@ -152,6 +152,19 @@
 (false? (nil-check :b {:a nil :b 2})) ;; => true
 (false? (nil-check :c {:a nil :b 2})) ;; => true
 
+
+;; #161: Subset and Superset
+;; Set A is a subset of set B, or equivalently B is a superset of A, if A is "contained" inside B. A and B may coincide.
+;; (clojure.set/superset? #{1 2} #{2})
+;; (clojure.set/subset? #{1} __)
+;; (clojure.set/superset? __ #{1 2})
+;; (clojure.set/subset? #{1 2} __)
+(clojure.set/superset? #{1 2} #{2}) ;; => true
+(clojure.set/subset? #{1} #{1 2}) ;; => true
+(clojure.set/superset? #{1 2} #{1 2}) ;; => true
+(clojure.set/subset? #{1 2} #{1 2}) ;; => true
+
+
 ;; #162: Logical falsity and truth
 ;; In Clojure, only nil and false represent the values of logical falsity in conditional tests - anything else is logical truth.
 ;; (= __ (if-not false 1 0))
@@ -168,18 +181,6 @@
 (= 1 (if [0] 1 0))
 (= 1 (if 0 1 0))
 (= 1 (if 1 1 0))
-
-
-;; #161: Subset and Superset
-;; Set A is a subset of set B, or equivalently B is a superset of A, if A is "contained" inside B. A and B may coincide.
-;; (clojure.set/superset? #{1 2} #{2})
-;; (clojure.set/subset? #{1} __)
-;; (clojure.set/superset? __ #{1 2})
-;; (clojure.set/subset? #{1 2} __)
-(clojure.set/superset? #{1 2} #{2}) ;; => true
-(clojure.set/subset? #{1} #{1 2}) ;; => true
-(clojure.set/superset? #{1 2} #{1 2}) ;; => true
-(clojure.set/subset? #{1 2} #{1 2}) ;; => true
 
 
 ;; #52: Intro to Destructuring
@@ -249,7 +250,6 @@
 (= (count-seq '(1 2 3 3 1)) 5)
 (= (count-seq "Hello World") 11)
 (= (count-seq [[1 2] [3 4] [5 6]]) 3)
-
 ;; Here's count-seq as a reduction:
 (defn reduce-count-seq [coll]
   (reduce (fn [a _] (inc a)) 0 coll))
@@ -267,15 +267,6 @@
 (= (sum-it-all-up '(1 10 3)) 14)
 
 
-;; #25: Find the odd numbers
-;; Write a function which returns only the odd numbers from a sequence.
-(defn my-odd? [coll]
-  (filter #(= (mod % 2) 1)
-          coll))
-(= (my-odd? #{1 2 3 4 5}) '(1 3 5))
-(= (my-odd? [4 2 1 6]) '(1))
-(= (my-odd? [2 2 4 6]) '())
-(= (my-odd? [1 1 1 3]) '(1 1 1 3))
 
 
 ;; #23: Reverse a Sequence
@@ -287,6 +278,16 @@
 (my-reverse [1 2 3 4 5]) ;; => (5 4 3 2 1)
 ;; We could make this even more condensed:
 #(reduce conj '() %)
+
+
+;; #25: odd numbers
+(defn my-odd? [coll]
+  (filter #(= (mod % 2) 1)
+          coll))
+(= (my-odd? #{1 2 3 4 5}) '(1 3 5))
+(= (my-odd? [4 2 1 6]) '(1))
+(= (my-odd? [2 2 4 6]) '())
+(= (my-odd? [1 1 1 3]) '(1 1 1 3))
 
 
 ;; #27: Palindrome Detector
@@ -347,9 +348,9 @@
 ;; a new string containing only the capital letters.
 (def get-caps (fn [s]
                 (apply str (re-seq #"[A-Z]" s))))
-(get-caps "HeLlO, WoRlD!")
-(get-caps "nothing")
-(get-caps "$#A(*&987Zf")
+(get-caps "HeLlO, WoRlD!") ;; "HLOWRD"
+(get-caps "nothing")       ;; ""
+(get-caps "$#A(*&987Zf")   ;; "AZ"
 
 
 ;; #30 Compress a Sequence
@@ -378,6 +379,10 @@
   (mapcat (fn [x] [x x]) coll))
 (dup [1 2 3]) ;; => (1 1 2 2 3 3)
 
+(defn dupe [coll]
+  (mapcat #(repeat 2 %) coll))
+
+(dupe [1 2 3]) ;; => (1 1 2 2 3 3)
 
 ;; #33: Replicate a Sequence
 ;; Write a function which replicates each element of a sequence a variable number of times.
@@ -445,7 +450,6 @@
 (defn factorial [n]
   (reduce * 1 (range 1 (inc n))))
 (factorial 6) ;; => 720
-
 ;; Or here's a fun one;
 ;; have to inc the arg because range does not include its upper range in returned seq
 (#(->> %
@@ -453,6 +457,7 @@
        range
        rest
        (reduce *)) 18) ; 6402373705728000
+
 
 ;; #45: Iterate
 ;; The iterate function can be used to produce an infinite lazy sequence.
@@ -492,20 +497,37 @@
 
 ;; #62: Re-implement Iterate
 ;; Given a side-effect free function f and an initial value x write a function which returns an infinite lazy sequence of x, (f x), (f (f x)), (f (f (f x))), etc.
-(fn my-it [f x]
-  (lazy-seq (cons x (my-it f (f x)))))
+(def lazy-iterate (fn [f x]
+  (lazy-seq (cons x (my-it f (f x))))))
+(= (take 5 (lazy-iterate #(* 2 %) 1)) [1 2 4 8 16])
+(= (take 100 (lazy-iterate inc 0)) (take 100 (range)))
+(= (take 9 (lazy-iterate #(inc (mod % 3)) 1)) (take 9 (cycle [1 2 3])))
 
-(defn my-iterate [f x]
-  (fn infn []
-    (f x)
-    )
-  )
 
-(= (take 5 (my-iterate #(* 2 %) 1)) [1 2 4 8 16])
+; Given a function f and a sequence s, write a function which returns a map. The keys should be the values of f applied to each item in s. The value at each key should be a vector of corresponding items in the order they appear in s.
 
-(= (take 100 (my-iterate inc 0)) (take 100 (range)))
-(= (take 9 (my-iterate #(inc (mod % 3)) 1)) (take 9 (cycle [1 2 3])))
+;; #63
+;; group-sep -> map of { :f(s) ...[vals] }
+;; TODO: Study this one! I still don't fully grasp it.
+(defn group-seq [f xs]
+  (into {}
+        (map #(vector (f (first %)) (vec %))
+             (partition-by f (sort xs)))))
+(group-seq #(> % 5) [1 3 6 8]) ;; {false [1 3], true [6 8]}
+(group-seq #(apply / %) [[1 2] [2 4] [4 6] [3 6]]) ;; {1/2 [[1 2] [2 4] [3 6]], 2/3 [[4 6]]}
+(group-seq count [[1] [1 2] [3] [1 2 3] [2 3]]) ;; {1 [[1] [3]], 2 [[1 2] [2 3]], 3 [[1 2 3]]}
 
+
+;; #66
+(defn gcd [n m]
+  (first (filter
+      #(and (zero? (mod n %))
+            (zero? (mod m %)))
+      (range n 0 -1))))
+(gcd 2 4) ;; 2
+(gcd 10 5) ;; 5
+(gcd 5 7) ;; 1
+(gcd 1023 858) ;; 33
 
 
 ;; #83: A Half-Truth
@@ -539,6 +561,30 @@
 (= (set-intersect #{:a :b :c :d} #{:c :e :a :f :d}) #{:a :c :d})
 
 
+;; #90
+(defn cartesian-product [sa sb]
+  (set (for [x sa
+             y sb]
+         [x y])))
+(cartesian-product #{"ace" "king" "queen"} #{"♠" "♥" "♦" "♣"})
+;; => #{["ace" "♠"] ["queen" "♠"] ["ace" "♥"] ["ace" "♦"] ["king" "♣"] ["queen" "♣"] ["queen" "♥"] ["king" "♦"] ["ace" "♣"] ["queen" "♦"] ["king" "♥"] ["king" "♠"]}
+(cartesian-product #{1 2 3} #{4 5})
+;; => #{[2 5] [3 4] [1 4] [1 5] [2 4] [3 5]}
+(count (cartesian-product (into #{} (range 10))
+                  (into #{} (range 30)))) ;; => 300
+
+
+;; #99
+(defn product-digits [n m]
+  (into []
+        (map
+         #(Integer/parseInt (str %))
+         (str (* n m)))))
+(product-digits 10 10)   ;; [1 0 0]
+(product-digits 99 9)    ;; [8 9 1]
+(product-digits 999 99)  ;; [9 8 9 0 1]
+
+
 ;; #107
 (defn to-the-nth [n]
   (fn [x]
@@ -556,25 +602,22 @@
        (op a b) :lt
        (op b a) :gt
        :else :eq)))
-
 (do-compare < 5 1) ;; :gt
 (do-compare (fn [x y] (< (count x) (count y))) "pear" "plum") ;; :eq
 (= :lt (do-compare (fn [x y] (< (mod x 5) (mod y 5))) 21 3)) ;; true
 (= :gt (do-compare > 0 2)) ;; true
 
 
-
-
 ;;;;;;;;;;;;;;;;;;;;
 ;; *** MEDIUM *** ;;
 ;;;;;;;;;;;;;;;;;;;;
+
 
 ;; #43: Reverse Interleave
 ;; Write a function which reverses the interleave process into x number of subsequences.
 ;; Old Attempt:
 ;;(defn reverse-interleave [seq leaves]
-;;  (take (/ (count seq) leaves) seq)
-;;   )
+;;  (take (/ (count seq) leaves) seq))
 (defn reverse-interleave [seq n]
   (apply map vector (partition n seq)))
 (reverse-interleave [1 2 3 4 5 6] 2) ;; => ([1 3 5] [2 4 6])
