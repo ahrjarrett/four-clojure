@@ -42,9 +42,11 @@
 ;; (= [__] (list :a :b :c) (vec '(:a :b :c)) (vector :a :b :c))
 (= [:a :b :c] (list :a :b :c) (vec '(:a :b :c)) (vector :a :b :c))
 
+
 ;; #7: Vectors: conj
 ;; (= __ (conj [1 2 3] 4))
 (= (vec '(1 2 3 4)) (conj [1 2 3] 4))
+(= (into [] '(1 2 3 4)) (conj [1 2 3] 4))
 
 
 ;; #8: Intro to Sets
@@ -119,6 +121,11 @@
 ;; (= __ (filter #(> % 5) '(3 4 5 6 7)))
 (= '(6 7) (filter #(> % 5) '(3 4 5 6 7)))
 
+
+;; 19 last element
+(#(last %) [1 2 3 4])
+(#(count %) [1 2 3 9])
+(#(nth % (- (count %) 1)) [1 2 3 9])
 
 ;; #64: Intro to Reduce
 ;; (= 15 (reduce __ [1 2 3 4 5]))
@@ -483,6 +490,52 @@
 (= (split-seq 2 [[1 2] [3 4] [5 6]]) [[[1 2] [3 4]] [[5 6]]]) ;; true
 
 
+;; #61: Map Construction
+
+
+
+;; #83: A Half-Truth
+;; Write a function which takes a variable number of booleans.
+;; Your function should return true if some of the parameters are true,
+;; but not all of the parameters are true. Otherwise your function should return false.
+;; http://www.4clojure.com/problem/83
+(defn half-true? [& bools]
+  (if (and (some true? bools)
+           (some false? bools))
+    true false))
+;; As an inline function:
+(#(if (and (some true? %&) (some false? %&)) true false) true false true)
+(half-true? false false true)
+(half-true? true true true)
+(half-true? false false false)
+(= false (half-true? false false))
+(= true (half-true? true false))
+(= false (half-true? true))
+(= true (half-true? false true false))
+(= false (half-true? true true true))
+(= true (half-true? true true true false))
+
+
+;; #81
+(defn set-intersect [s1 s2]
+  (set (filter #(s1 %) s2)))
+
+(set-intersect #{0 1 2 3} #{2 3 4 5}) ; #{2 3}
+(= (set-intersect #{0 1 2} #{3 4 5}) #{})
+(= (set-intersect #{:a :b :c :d} #{:c :e :a :f :d}) #{:a :c :d})
+
+
+;; #107
+(defn to-the-nth [n]
+  (fn [x]
+    (reduce * (repeat n x))))
+((to-the-nth 3) 4) ;; 64
+;; Using the clojure to create intermediary functions:
+(def to-the-8th
+  (to-the-nth 8))
+(to-the-8th 2) ;; 256
+
+
 ;;;;;;;;;;;;;;;;;;;;
 ;; *** MEDIUM *** ;;
 ;;;;;;;;;;;;;;;;;;;;
@@ -512,4 +565,20 @@
 (= true ((flip >) 7 8))
 (= 4 ((flip quot) 2 8))
 (= [1 2 3] ((flip take) [1 2 3 4 5] 3))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
