@@ -490,7 +490,21 @@
 (= (split-seq 2 [[1 2] [3 4] [5 6]]) [[[1 2] [3 4]] [[5 6]]]) ;; true
 
 
-;; #61: Map Construction
+;; #62: Re-implement Iterate
+;; Given a side-effect free function f and an initial value x write a function which returns an infinite lazy sequence of x, (f x), (f (f x)), (f (f (f x))), etc.
+(fn my-it [f x]
+  (lazy-seq (cons x (my-it f (f x)))))
+
+(defn my-iterate [f x]
+  (fn infn []
+    (f x)
+    )
+  )
+
+(= (take 5 (my-iterate #(* 2 %) 1)) [1 2 4 8 16])
+
+(= (take 100 (my-iterate inc 0)) (take 100 (range)))
+(= (take 9 (my-iterate #(inc (mod % 3)) 1)) (take 9 (cycle [1 2 3])))
 
 
 
@@ -534,6 +548,21 @@
 (def to-the-8th
   (to-the-nth 8))
 (to-the-8th 2) ;; 256
+
+
+;; #166
+(def do-compare (fn [op a b]
+     (cond
+       (op a b) :lt
+       (op b a) :gt
+       :else :eq)))
+
+(do-compare < 5 1) ;; :gt
+(do-compare (fn [x y] (< (count x) (count y))) "pear" "plum") ;; :eq
+(= :lt (do-compare (fn [x y] (< (mod x 5) (mod y 5))) 21 3)) ;; true
+(= :gt (do-compare > 0 2)) ;; true
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;
