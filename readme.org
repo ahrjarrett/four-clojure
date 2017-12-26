@@ -3,7 +3,7 @@
 #+EMAIL: ahrjarrett@gmail.com
 #+OPTIONS: toc:nil num:nil
 
-My answers to various [[http://www.4clojure.com/][4Clojure]] problems.
+My answers to various [[http://www.4clojure.com/][4Clojure]] problems. Original code can be found in [[https://github.com/ahrjarrett/four-clojure/blob/master/src/four_clojure/core.clj][core.clj]].
 
 * Elementary
 ** Problem 3
@@ -596,6 +596,28 @@ Given a side-effect free function f and an initial value x write a function whic
 (half-true? false false false)               ;; false
 #+END_SRC
 
+** Problem 88
+[[http://www.4clojure.com/problem/88][Symmetric Difference]]
+- Write a function which returns the symmetric difference of two sets. The symmetric difference is the set of items belonging to one but not both of the two sets.
+#+BEGIN_SRC clojure
+(defn symmetric-difference [sa sb]
+  (let [uniq-a (clojure.set/difference sa sb)
+        uniq-b (clojure.set/difference sb sa)]
+    (clojure.set/union uniq-a uniq-b)))
+;; tests:
+(symmetric-difference #{1 2 3 4 5 6} #{1 3 5 7})       ;; => #{2 4 6 7}
+(symmetric-difference #{:a :b :c} #{})                 ;; => #{:a :b :c}
+(symmetric-difference #{} #{4 5 6})                    ;; => #{4 5 6}
+(symmetric-difference #{[1 2] [2 3]} #{[2 3] [3 4]})   ;; =>#{[1 2] [3 4]}
+
+;; found this version online, i think it's pretty nice:
+(fn set-diff [sa sb]
+  (set
+    (concat
+      (filter (complement sb) sa)
+      (filter (complement sa) sb))))
+#+END_SRC
+
 ** Problem 90
 [[http://www.4clojure.com/problem/90][Cartesian Product]]
 - Write a function which calculates the [[https://en.wikipedia.org/wiki/Cartesian_product][Cartesian product]] of two sets.
@@ -608,6 +630,26 @@ Given a side-effect free function f and an initial value x write a function whic
 ;; => #{["ace" "♠"] ["queen" "♠"] ["ace" "♥"] ["ace" "♦"] ["king" "♣"] ["queen" "♣"] ["queen" "♥"] ["king" "♦"] ["ace" "♣"] ["queen" "♦"] ["king" "♥"] ["king" "♠"]}
 (cartesian-product #{1 2 3} #{4 5})
 ;; => #{[2 5] [3 4] [1 4] [1 5] [2 4] [3 5]}
+#+END_SRC
+
+** Problem 97
+[[http://www.4clojure.com/problem/97][Pascal's Triangle]]
+- Write a function which returns the nth row of Pascal's Triangle. 
+#+BEGIN_SRC clojure
+(defn pascals-triangle [n]
+  (nth (iterate #(vec (map + (conj % 0) (cons 0 %)))
+                '[1])
+       (dec n)))
+
+;; tests:
+(pascals-triangle 1) ;; => [1]
+(map pascals-triangle (range 1 6))
+;; =>   ([1]
+;;      [1 1]
+;;     [1 2 1]
+;;    [1 3 3 1]
+;;   [1 4 6 4 1])
+(pascals-triangle 11) ;; => [1 10 45 120 210 252 210 120 45 10 1]
 #+END_SRC
 
 ** Problem 99
@@ -636,6 +678,38 @@ Given a side-effect free function f and an initial value x write a function whic
 (def to-the-8th
   (to-the-nth 8))
 (to-the-8th 2) ;; 256
+#+END_SRC
+
+** Problem 118
+[[http://www.4clojure.com/problem/118][Re-implement Map]]
+- Map is one of the core elements of a functional programming language. Given a function f and an input sequence s, return a lazy sequence of (f x) for each element x in s.
+*Notes:* The tricky part was including the lazy-seq in the call to the helper function; otherwise, the 3rd test creates a stack overflow.
+#+BEGIN_SRC clojure
+(defn my-cool-map [f s]
+  ((fn map-helper [xs]
+    (when (not-empty xs)
+      (cons (f (first xs)) (lazy-seq (map-helper (rest xs))))))
+  s))
+;; tests:
+(my-cool-map inc [2 3 4 5 6]) ;; => (3 4 5 6 7)
+(my-cool-map (fn [_] nil) (range 10)) ;; (nil nil nil nil nil nil nil nil nil nil)
+(->> (my-cool-map inc (range))
+    (drop (dec 1000000))
+    (take 2)) ;; => (1000000 1000001) 
+#+END_SRC
+
+** Problem 157
+[[http://www.4clojure.com/problem/157][Indexing Sequences]]
+- Transform a sequence into a sequence of pairs containing the original elements along with their index.
+#+BEGIN_SRC clojure
+(defn index-seq [coll]
+  (map #(vector %1 %2) coll (range)))
+;; This one is cool, because we're passing MAP an extra
+;; seq, which is then being fed into the anonymous function
+;; as an index, because it was generated with RANGE:
+(index-seq [:a :b :c])            ;; => [[:a 0] [:b 1] [:c 2]]
+(index-seq [0 1 3])               ;; => ((0 0) (1 1) (3 2))
+(index-seq [[:foo] {:bar :baz}])  ;; => [[[:foo] 0] [{:bar :baz} 1]]
 #+END_SRC
 
 ** Problem 166

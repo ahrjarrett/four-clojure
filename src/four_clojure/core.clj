@@ -530,6 +530,14 @@
 (gcd 1023 858) ;; 33
 
 
+;; #81
+(defn set-intersect [s1 s2]
+  (set (filter #(s1 %) s2)))
+(set-intersect #{0 1 2 3} #{2 3 4 5}) ; #{2 3}
+(= (set-intersect #{0 1 2} #{3 4 5}) #{})
+(= (set-intersect #{:a :b :c :d} #{:c :e :a :f :d}) #{:a :c :d})
+
+
 ;; #83: A Half-Truth
 ;; Write a function which takes a variable number of booleans.
 ;; Your function should return true if some of the parameters are true,
@@ -552,13 +560,22 @@
 (= true (half-true? true true true false))
 
 
-;; #81
-(defn set-intersect [s1 s2]
-  (set (filter #(s1 %) s2)))
-
-(set-intersect #{0 1 2 3} #{2 3 4 5}) ; #{2 3}
-(= (set-intersect #{0 1 2} #{3 4 5}) #{})
-(= (set-intersect #{:a :b :c :d} #{:c :e :a :f :d}) #{:a :c :d})
+;; #88
+(defn symmetric-difference [sa sb]
+  (let [uniq-a (clojure.set/difference sa sb)
+        uniq-b (clojure.set/difference sb sa)]
+    (clojure.set/union uniq-a uniq-b)))
+;; tests:
+(symmetric-difference #{1 2 3 4 5 6} #{1 3 5 7})       ;; => #{2 4 6 7}
+(symmetric-difference #{:a :b :c} #{})                 ;; => #{:a :b :c}
+(symmetric-difference #{} #{4 5 6})                    ;; => #{4 5 6}
+(symmetric-difference #{[1 2] [2 3]} #{[2 3] [3 4]})   ;; =>#{[1 2] [3 4]}
+;; found this version online, i think it's pretty nice:
+(fn set-diff [sa sb]
+  (set
+    (concat
+      (filter (complement sb) sa)
+      (filter (complement sa) sb))))
 
 
 ;; #90
@@ -572,6 +589,22 @@
 ;; => #{[2 5] [3 4] [1 4] [1 5] [2 4] [3 5]}
 (count (cartesian-product (into #{} (range 10))
                   (into #{} (range 30)))) ;; => 300
+
+
+;; #97
+(defn pascals-triangle [n]
+  (nth (iterate #(vec (map + (conj % 0) (cons 0 %)))
+                '[1])
+       (dec n)))
+;; tests:
+(pascals-triangle 1) ;; => [1]
+(map pascals-triangle (range 1 6))
+;; =>   ([1]
+;;      [1 1]
+;;     [1 2 1]
+;;    [1 3 3 1]
+;;   [1 4 6 4 1])
+(pascals-triangle 11) ;; => [1 10 45 120 210 252 210 120 45 10 1]
 
 
 ;; #99
@@ -594,6 +627,37 @@
 (def to-the-8th
   (to-the-nth 8))
 (to-the-8th 2) ;; 256
+
+
+;; #118
+(defn my-cool-map [f s]
+  ((fn map-helper [xs]
+    (when (not-empty xs)
+      (cons (f (first xs)) (lazy-seq (map-helper (rest xs))))))
+  s))
+(my-cool-map inc [2 3 4 5 6]) ;; => (3 4 5 6 7)
+(my-cool-map (fn [_] nil) (range 10)) ;; (nil nil nil nil nil nil nil nil nil nil)
+(->> (my-cool-map inc (range))
+    (drop (dec 1000000))
+    (take 2)) ;; => (1000000 1000001) 
+
+
+;; #126
+;; Satisfy the following:
+(let [x Class]
+  (and (= (class x) x) x)) ;; => java.lang.Class
+;; TODO: figure out why this is a solution??
+
+
+;; #157
+;; This one is cool, because we're passing MAP an extra
+;; seq, which is then being fed into the anonymous function
+;; as an index, because it was generated with RANGE:
+(defn index-seq [coll]
+  (map #(vector %1 %2) coll (range)))
+(index-seq [:a :b :c])            ;; => [[:a 0] [:b 1] [:c 2]]
+(index-seq [0 1 3])               ;; => ((0 0) (1 1) (3 2))
+(index-seq [[:foo] {:bar :baz}])  ;; => [[[:foo] 0] [{:bar :baz} 1]]
 
 
 ;; #166
